@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: santuapptom
+  labels: 
+    app:  santuapptom
+spec:
+  replicas: 1
+  selector:
+    matchlabels:
+      app:  santuapptom
+  template:
+    metadata:
+      labels:
+        app:  santuapptom
+    spec:
+      containers:
+        - name: santuapptom
+          image:  vprofile/vprofileapp:V1
+          ports:
+            - name: santuapptom-port
+              containerPort:  8080
+      initContainers:
+        - name: init-mydb
+          image:  busybox
+          command:  ['sh' '-c' 'until nslookup santudb; do echo waiting for mydb; sleep 2; done;']
+        - name: init-memcache
+          image:  busybox
+          command:  ['sh' '-c' 'until nslookup santumemcache; do echo waiting for santumemcache; sleep2; done;']
